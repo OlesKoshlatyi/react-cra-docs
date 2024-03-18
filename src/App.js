@@ -1,45 +1,57 @@
-import "./styles.css";
+import "./index.css";
 
 import { useState } from "react";
 
-function Square() {
-  const [value, setValue] = useState(null);
-
-  function handleClick() {
-    setValue("x");
-  }
-
+function Square({ value, onSquareClick }) {
   return (
     <button
       type="button"
       className="square"
-      onClick={handleClick}
+      onClick={onSquareClick}
     >
       {value}
     </button>
   );
 }
 
-function App() {
+function TicTacToeBoard() {
+  const [squares, setSquares] = useState(Array(9).fill(null));
+
+  function onSquareClick(idx) {
+    const newSquares = squares.slice();
+    newSquares[idx] = idx;
+    setSquares(newSquares);
+  }
+
   return (
     <>
-      <div className="board-row">
-        <Square />
-        <Square />
-        <Square />
-      </div>
-      <div className="board-row">
-        <Square />
-        <Square />
-        <Square />
-      </div>
-      <div className="board-row">
-        <Square />
-        <Square />
-        <Square />
-      </div>
+      {Array(3)
+        .fill("")
+        .map((el, rowIdx) => (
+          <div
+            key={rowIdx}
+            className="board-row"
+          >
+            {Array(3)
+              .fill("")
+              .map((el, colIdx) => {
+                const squareIdx = rowIdx * 3 + colIdx;
+                return (
+                  <Square
+                    key={squareIdx}
+                    value={squares[squareIdx]}
+                    onSquareClick={() => onSquareClick(squareIdx)}
+                  />
+                );
+              })}
+          </div>
+        ))}
     </>
   );
+}
+
+function App() {
+  return <TicTacToeBoard />;
 }
 
 export default App;
